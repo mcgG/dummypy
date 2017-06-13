@@ -1,0 +1,43 @@
+#!/opt/intel/intelpython27/bin/python
+#-*- encoding-utf8 -*-
+
+import os
+import sys
+from server import upload
+from server import getfilelist
+import json
+
+def _upload(path, sources):
+    filename = sources[0]
+    print upload(path + '/' + filename)
+
+if __name__ == '__main__':
+    path = os.path.abspath('.')
+    print 'current path: %s' % path
+
+    if len(sys.argv) == 1:
+        print 'Welcome to dummy! dummy!'
+        exit(0)
+
+    command = sys.argv[1]
+
+    if command == 'ls':
+        print os.listdir(path)
+    elif command == 'upload':
+        files = map(str.strip, raw_input('Choose your files: ').split(' '))
+        print files
+        confirm = raw_input('Confirm your files y/n(y):')
+        if confirm.lower() in('y', '', None):
+            print 'Uploading...'
+            _upload(path, files)
+        elif confirm.lower() == 'n':
+            print 'Canceled'
+        else:
+            pass
+    elif command == '-s' and len(sys.argv)>1 and sys.argv[2] == 'ls':
+        for info in getfilelist():
+            print info['fileName'], info['lastModifiedTime']
+        
+
+
+    
